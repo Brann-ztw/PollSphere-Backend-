@@ -1,6 +1,6 @@
 import { Collection, ObjectId } from "mongodb";
 import { getUsers } from "./getUsers";
-import { UserModel } from "../../types/collections/auth/Users";
+import { UserModel } from "../../types/UsersModel";
 
 export const createUser = async(
   _id: ObjectId,

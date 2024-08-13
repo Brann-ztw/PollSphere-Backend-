@@ -1,6 +1,7 @@
-import { UserBody } from "../types/controllers/auth/Register";
 
-export const validateRequestBody = (body: UserBody, requiredFields: (keyof UserBody)[]): boolean => {
+
+
+export const validateRequestBody = <Type>(body: Type, requiredFields: (keyof Type)[]): boolean => {
   for (const field of requiredFields) {
     if (body[field] === undefined || body[field] === '') return false;
   }
