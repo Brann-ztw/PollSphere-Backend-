@@ -6,7 +6,7 @@ import { UserModel, UserLogin } from "../../types/UsersModel";
 import { getUserByEmail } from "../../collections/auth/getUsers";
 import bcrypt from 'bcrypt';
 
-export const loginControll = async(req: Request, res: Response) => {
+export const loginControll = async(req: Request, res: Response): Promise<Response> => {
   try {
     const { email, password } = req.body as UserLogin;
 

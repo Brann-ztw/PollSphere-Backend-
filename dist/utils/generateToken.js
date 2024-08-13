@@ -8,7 +8,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../config/config");
 const JWT_SECRET = config_1.config.jwt_secret;
 const generateToken = (_id) => {
-    return jsonwebtoken_1.default.sign({ _id }, JWT_SECRET, {
+    return jsonwebtoken_1.default.sign({ id: _id }, JWT_SECRET, {
         expiresIn: '1h'
     });
 };

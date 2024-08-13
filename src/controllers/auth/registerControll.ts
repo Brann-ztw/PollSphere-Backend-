@@ -9,7 +9,7 @@ import bcrypt from 'bcrypt';
 const saltRounds: number = 10;
 
 
-export const registerControll = async(req: Request, res: Response) => {
+export const registerControll = async(req: Request, res: Response): Promise<Response> => {
   try {
     const { name, dirname, age, email, password, phoneNumber} = req.body as UserRegister;
 
