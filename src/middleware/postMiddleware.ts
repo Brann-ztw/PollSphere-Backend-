@@ -12,14 +12,11 @@ export const postMiddleware = async(req: Request, res: Response, next: NextFunct
     if(authHeader && authHeader.startsWith('Bearer')) {
       const token: string = authHeader.split(' ')[1];
       const decode = jwt.verify(token, config.jwt_secret) as JwtPayload;
-      console.log('Decode: ', decode)
       const user: UserModel | null = await getUserById(new ObjectId(decode.id));
-      console.log('User: ', user)
 
       if (user) {
         next();
       } else {
-        console.log('Prueba 1')
         return res.status(401).json({message: 'Not authorized, no token'});
       }
     } else {
