@@ -1,16 +1,13 @@
-import { Collection, Db, ObjectId, WithId } from "mongodb";
+import { Collection, Db, WithId } from "mongodb";
 import { getDb } from "../../config/database";
-import { UserModel } from "../../types/UsersModel";
 import { PostModel } from "../../types/PostModel";
 
-export const getPost = ():Collection<PostModel> => {
+export const getPostCollection = (): Collection<PostModel> => {
   const db: Db = getDb();
-  return db.collection<PostModel>('Post');
+  return db.collection<PostModel>('Posts');
 };
 
-export const getPosts = async (): Promise<WithId<PostModel> | null> => {
-  const userCollection: Collection<PostModel> = await getPost();
-  return userCollection.findOne();
+export const getAllPosts = async (): Promise<WithId<PostModel>[]> => {
+  const postCollection: Collection<PostModel> = getPostCollection();
+  return postCollection.find({}).toArray();
 };
-
-

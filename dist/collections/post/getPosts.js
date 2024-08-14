@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPosts = exports.getPost = void 0;
+exports.getAllPosts = exports.getPostCollection = void 0;
 const database_1 = require("../../config/database");
-const getPost = () => {
+const getPostCollection = () => {
     const db = (0, database_1.getDb)();
-    return db.collection('Post');
+    return db.collection('Posts');
 };
-exports.getPost = getPost;
-const getPosts = async () => {
-    const userCollection = await (0, exports.getPost)();
-    return userCollection.findOne();
+exports.getPostCollection = getPostCollection;
+const getAllPosts = async () => {
+    const postCollection = (0, exports.getPostCollection)();
+    return postCollection.find({}).toArray();
 };
-exports.getPosts = getPosts;
+exports.getAllPosts = getAllPosts;

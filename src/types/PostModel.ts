@@ -1,20 +1,25 @@
 import { ObjectId } from "mongodb";
 
-interface Comment {
+export interface Comment {
   owner: string,
   likes: number,
   comment: string
+}
+
+export interface Options {
+  option: string,
+  likes: number
 }
 
 export interface Post {
   owner: string,
   title: string,
   description: string,
-  options: string[],
-  likes: number,
-  comment: Comment[]
+  options: Options[],
 }
 
-export interface PostModel {
+export interface PostModel  extends Post{
   _id: ObjectId
+  likes: number,
+  comment: Comment[]
 }

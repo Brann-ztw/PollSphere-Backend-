@@ -14,14 +14,11 @@ const postMiddleware = async (req, res, next) => {
         if (authHeader && authHeader.startsWith('Bearer')) {
             const token = authHeader.split(' ')[1];
             const decode = jsonwebtoken_1.default.verify(token, config_1.config.jwt_secret);
-            console.log('Decode: ', decode);
             const user = await (0, getUsers_1.getUserById)(new mongodb_1.ObjectId(decode.id));
-            console.log('User: ', user);
             if (user) {
                 next();
             }
             else {
-                console.log('Prueba 1');
                 return res.status(401).json({ message: 'Not authorized, no token' });
             }
         }

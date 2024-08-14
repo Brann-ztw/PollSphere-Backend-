@@ -1,15 +1,19 @@
 import { Request, Response } from "express";
-import { getPosts } from "../../collections/post/getPosts";
+import { getAllPosts } from "../../collections/post/getPosts";
 import { PostModel } from "../../types/PostModel";
-import { Collection } from "mongodb";
+import { WithId } from "mongodb";
 
-export const getPostControll = async(req: Request, res: Response) => {
+export const getPostControll = async (req: Request, res: Response): Promise<Response> => {
   try {
-    let post = await getPosts();
-    return res.status(200).json(post);
+    const posts: WithId<PostModel>[] = await getAllPosts();
+
+    if (posts === null) {
+      return res.status(200).json({ success: true, message: 'No posts found', data: [] });
+    }
+
+    return res.status(200).json({ success: true, data: posts });
   } catch (error) {
-    console.log('Error in controller getPost: ', error);
-    return res.status(500).json({succes: false, message: 'Internal server error'});
+    console.error('Error in controller getPost:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
-

@@ -10,37 +10,34 @@ export const loginControll = async(req: Request, res: Response): Promise<Respons
   try {
     const { email, password } = req.body as UserLogin;
 
-    if(!validateRequestBody<UserLogin>(req.body, ['email', 'password'])) {
-      return res.status(404).json({succes: false, message: 'A parameter is undefined'});
+    if (!validateRequestBody<UserLogin>(req.body, ['email', 'password'])) {
+      return res.status(400).json({ success: false, message: 'A parameter is undefined' });
     }
 
     const validEmail: RegExp = /^[\w\DÑñ]+([.-_+]?\w+)*@[a-zA-Z\d-]+(\.[a-zA-Z]{2,10})+$/;
-    if(!validEmail.test(email)) {
-      return res.status(404).json({succes: false, message: 'Invalid email format'});
+    if (!validEmail.test(email)) {
+      return res.status(400).json({ success: false, message: 'Invalid email format' });
     }
 
-    if(password.length <= 8) {
-      return res.status(404).json({succes: false, message: 'Password too short, must be at least 8 characters long'});
-    }
-    if(password.length >= 30) {
-      return res.status(404).json({succes: false, message: 'Password too large, must be at least 8 characters long'});
+    if (password.length < 8 || password.length > 30) {
+      return res.status(400).json({ success: false, message: 'Password must be between 8 and 30 characters long' });
     }
 
     const userExistent: WithId<UserModel> | null = await getUserByEmail(email);
-    if(!userExistent) {
-      return res.status(400).json({succes: false, message: 'Invalid credentials'});
+    if (!userExistent) {
+      return res.status(400).json({ success: false, message: 'Invalid credentials' });
+    }
+
+    const isPasswordValid: boolean = await bcrypt.compare(password, userExistent.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ success: false, message: 'Invalid password' });
     }
 
     const token: string = generateToken(userExistent._id);
-    const isPasswordValid: boolean = await bcrypt.compare(password, userExistent.password);
-
-    if(!isPasswordValid) {
-      return res.status(400).json({succes: false, message: 'Invalid password'});
-    }
-
-    return res.status(201).json({sucess: true, message: 'Logged in user',token: token});
+    return res.status(200).json({ success: true, message: 'User logged in successfully', token: token });
+    
   } catch (error) {
-    console.log('Error in controller register: ', error);
-    return res.status(500).json({succes: false, message: 'Internal server error'});
+    console.error('Error in login controller:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
